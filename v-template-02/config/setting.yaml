@@ -1,0 +1,18 @@
+application:
+  name: template
+  version: 1.0.0
+  httpserver:
+    host: 0.0.0.0
+    port: 8082
+    mode: dev
+    readtimeout: 5
+    writetimeout: 5
+#database:
+#  type: mysql
+#  host: 127.0.0.1
+#  port: 3306
+#  username: root
+#  password: "root"
+#  dbname:
+
+

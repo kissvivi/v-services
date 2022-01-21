@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package test.service.v1;
+
+//import "google/api/annotations.proto";
+
+
+service Test {
+  rpc TestOk (TestOkReq) returns (TestOkReply) {
+  }
+}
+
+message TestOkReq {
+  int64   id =1;
+  string name =2;
+}
+
+message TestOkReply {
+  int64   id =1;
+  string name =2;
+}

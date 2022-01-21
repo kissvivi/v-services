@@ -1,0 +1,99 @@
+version: '3.7'
+
+networks:
+  feilu-base-net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.10.10.0/24
+          gateway: 10.10.10.1
+
+
+services:
+  etcd:
+    image: quay.io/coreos/etcd:v3.3.12
+    container_name: etcd-v3
+    ports:
+      - 2379:2379
+      - 2380:2380
+    networks:
+      feilu-base-net:
+        ipv4_address: 10.10.10.2
+    environment:
+      ETCDCTL_API: 3
+#    volumes:
+#      - /Users/owenliu/lehui/data/etcd/etcd-data:/etcd-data
+    command:
+      - "/usr/local/bin/etcd"
+      - "--name"
+      - "s1"
+      - "--data-dir"
+      - "/etcd-data"
+      - "--advertise-client-urls"
+      - "http://0.0.0.0:2379"
+      - --listen-client-urls
+      - "http://0.0.0.0:2379"
+      - "--initial-advertise-peer-urls"
+      - "http://0.0.0.0:2380"
+      - "--listen-peer-urls"
+      - "http://0.0.0.0:2380"
+      - "--initial-cluster-token"
+      - "tkn"
+      - "--initial-cluster"
+      - "s1=http://0.0.0.0:2380"
+      - "--initial-cluster-state"
+      - "new"
+
+  v-template-01:
+    image: v-template-01
+    container_name: v-template-01
+    restart: always
+    ports:
+      - "8081:8081"
+    command:
+      /go/src/v-template-01/server
+    networks:
+      feilu-base-net:
+       ipv4_address: 10.10.10.11
+#      - ipv4_address:172.18.0.10
+
+  v-template-02:
+    image: v-template-02
+    container_name: v-template-02
+    restart: always
+    ports:
+      - "8082:8082"
+    command:
+      /go/src/v-template-02/server
+    networks:
+      feilu-base-net:
+        ipv4_address: 10.10.10.12
+
+  v-template-03:
+    image: v-template-03
+    container_name: v-template-03
+    restart: always
+    ports:
+      - "8083:8083"
+    command:
+      /go/src/v-template-03/server
+    networks:
+      feilu-base-net:
+        ipv4_address: 10.10.10.13
+
+  v-template-etcd:
+    image: v-template-etcd
+    container_name: v-template-etcd
+    restart: always
+    ports:
+      - "8888:8888"
+    command:
+      /go/src/v-template-etcd/server
+    networks:
+      feilu-base-net:
+        ipv4_address: 10.10.10.10
+#    environment:
+#      ETCD_HOST: etcd
+#    links:
+#      - etcd:etcd
+
